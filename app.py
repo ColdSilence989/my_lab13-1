@@ -30,23 +30,26 @@ with open(LABELS_PATH, "r") as f:
 # --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
 
 def image_to_base64(img_pil):
-    """Конвертирует картинку (PIL) в строку base64 для HTML"""
+    # Если картинка слишком большая, уменьшаем её для экономии RAM
+    img_pil.thumbnail((400, 400)) 
     buf = io.BytesIO()
-    img_pil.save(buf, format="PNG")
-    buf.seek(0)
+    img_pil.save(buf, format="JPEG", quality=60) # JPEG вместо PNG
     return base64.b64encode(buf.getvalue()).decode('utf-8')
 
 def get_base64_hist(img_np, title):
-    """Рисуем гистограмму и превращаем её в base64"""
-    plt.figure(figsize=(4, 2))
-    # Проходим по каналам R, G, B
+    plt.figure(figsize=(3, 2), dpi=80) # Меньше размер и DPI
     colors = ['red', 'green', 'blue']
     for i, col in enumerate(colors):
         try:
-            hist, _ = np.histogram(img_np[:, :, i], bins=256, range=(0, 255))
-            plt.plot(hist, color=col, alpha=0.7)
-        except IndexError:
-            pass # На случай ЧБ фото
+            hist, _ = np.histogram(img_np[:, :, i], bins=64, range=(0, 255)) # Меньше бинов (64 вместо 256)
+            plt.plot(hist, color=col, linewidth=1)
+        except: pass
+    
+    plt.title(title, fontsize=8)
+    buf = io.BytesIO()
+    plt.savefig(buf, format='jpeg', quality=50) # Сжатый JPEG
+    plt.close('all') # Полная очистка
+    return base64.b64encode(buf.getvalue()).decode('utf-8')
             
     plt.title(title, fontsize=10)
     plt.tight_layout()
@@ -95,6 +98,8 @@ def index():
 
         # 3. Открываем оригинал
         original_img = Image.open(file.stream).convert('RGB')
+
+        original_img.thumbnail((800, 800))
         
         # 4. Фильтр Гаусса (NumPy)
         img_np = np.array(original_img)
