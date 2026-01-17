@@ -1,13 +1,13 @@
 import os
+import matplotlib
+matplotlib.use('Agg') # для экономии памяти
+import matplotlib.pyplot as plt
 import io
 import base64
 import requests
 import numpy as np
 from flask import Flask, render_template, request
 from PIL import Image
-import matplotlib
-matplotlib.use('Agg') # для экономии памяти
-import matplotlib.pyplot as plt
 import tflite_runtime.interpreter as tflite # легкая версия, чтобы уложиться в рендер
 from scipy.ndimage import gaussian_filter # по методичке
 
