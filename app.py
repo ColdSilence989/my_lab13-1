@@ -47,7 +47,7 @@ def get_base64_hist(img_np, title):
     
     plt.title(title, fontsize=8)
     buf = io.BytesIO()
-    plt.savefig(buf, format='jpeg', quality=50) # Сжатый JPEG
+    plt.savefig(buf, format='jpg')
     plt.close('all') # Полная очистка
     return base64.b64encode(buf.getvalue()).decode('utf-8')
             
