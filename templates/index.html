@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная 13-1</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; }
+        
+        /* Стили формы */
+        .upload-section { border: 2px dashed #3498db; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 30px; }
+        input[type="file"] { margin: 15px 0; }
+        button { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #2980b9; }
+
+        /* Сетка для результатов по секторам */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .sector-card { border: 1px solid #eee; padding: 15px; border-radius: 8px; background: #fafafa; text-align: center; }
+        .sector-card img { max-width: 100%; height: auto; border-radius: 4px; }
+        
+        .main-result { background: #e8f4fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid #3498db; }
+        .main-result h2 { margin-top: 0; color: #2980b9; }
+        
+        .captcha-container { display: flex; justify-content: center; margin: 15px 0; }
+        .hist-full { display: block; margin: 0 auto 20px; max-width: 100%; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Анализ изображения (Вариант 13)</h1>
+
+    <div class="upload-section">
+        <form method="POST" enctype="multipart/form-data">
+            <p>Выберите изображение для обработки (Гаусс + 4 сектора + ResNet50)</p>
+            <input type="file" name="file" accept="image/*" required>
+            
+            <div class="captcha-container">
+                <div class="g-recaptcha" data-sitekey="6LfBp00sAAAAALn9KkzbnVX8cVCDfgrrEaQ39Htn"></div>
+            </div>
+            
+            <button type="submit">Запустить обработку</button>
+        </form>
+    </div>
+
+    {% if prediction %}
+        <div class="main-result">
+            <h2>Общее предсказание: {{ prediction }}</h2>
+            <p>Ниже представлены результаты анализа каждого сектора отдельно</p>
+        </div>
+
+        <h3>Общая гистограмма (после фильтра Гаусса):</h3>
+        <img src="data:image/png;base64,{{ full_hist }}" class="hist-full" alt="Полная гистограмма">
+
+        <hr>
+
+        <h3>Результаты по секторам:</h3>
+        <div class="results-grid">
+            {% for i in range(4) %}
+            <div class="sector-card">
+                <h4>Сектор {{ i + 1 }}</h4>
+                <img src="data:image/png;base64,{{ hists[i] }}" alt="Гистограмма сектора {{ i+1 }}">
+                <p>Нейросеть видит: <strong>{{ corner_predictions[i] }}</strong></p>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

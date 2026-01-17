@@ -1,0 +1,27 @@
+# Виртуальное окружение 
+venv/
+ENV/
+env/
+
+# Кэш Python 
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Настройки VS Code
+.vscode/
+
+
+.env
+
+# Логи и временные файлы
+*.log
+tmp/
+
+# Файлы операционной системы 
+.DS_Store
+Thumbs.db
+
+# Результаты тестов
+.pytest_cache/

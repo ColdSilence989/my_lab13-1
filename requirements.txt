@@ -23,6 +23,7 @@ pygobject==3.48.2
 pyparsing==3.1.4
 python-dateutil==2.9.0.post0
 requests==2.32.4
+scipy==1.10.1
 six==1.17.0
 tflite-runtime==2.14.0
 urllib3==2.2.3
