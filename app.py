@@ -93,8 +93,7 @@ def index():
             data = {'secret': RECAPTCHA_SECRET_KEY, 'response': token}
             verify = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data).json()
             if not verify.get('success'):
-                # Можно вернуть ошибку, или пропустить для тестов
-                pass 
+                return "Forbidden", 403 
 
         # 3. Открываем оригинал
         original_img = Image.open(file.stream).convert('RGB')
