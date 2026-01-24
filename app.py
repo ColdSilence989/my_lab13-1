@@ -50,18 +50,8 @@ def get_base64_hist(img_np, title):
     plt.savefig(buf, format='jpg')
     plt.close('all') # Полная очистка
     return base64.b64encode(buf.getvalue()).decode('utf-8')
-            
-    plt.title(title, fontsize=10)
-    plt.tight_layout()
-    
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    plt.close()
-    buf.seek(0)
-    return base64.b64encode(buf.getvalue()).decode('utf-8')
 
-def prepare_for_ai(image_obj):
-    """Подготовка для нейросети: Center Crop + Resize 224x224"""
+def prepare_for_ai(image_obj): # Подготовка для нейросети: Center Crop + Resize 224x224, чтобы не сжать собаку
     w, h = image_obj.size
     min_dim = min(w, h)
     
@@ -74,7 +64,7 @@ def prepare_for_ai(image_obj):
     img_square = image_obj.crop((left, top, right, bottom))
     img_final = img_square.resize((224, 224))
     
-    # Добавляем размерность батча (1, 224, 224, 3)
+    # Добавляем размерность батча (1, 224, 224, 3) #требоване нейронки
     input_data = np.expand_dims(np.array(img_final), axis=0).astype(np.uint8)
     return input_data
 
@@ -102,7 +92,7 @@ def index():
         
         # 4. Фильтр Гаусса (NumPy)
         img_np = np.array(original_img)
-        blurred_np = gaussian_filter(img_np, sigma=(1, 1, 0)) # Размываем только X и Y, не цвета
+        blurred_np = gaussian_filter(img_np, sigma=(1, 1, 0)) # Размываем только X и Y, не цвета, иначе будет каша
         blurred_img = Image.fromarray(blurred_np)
 
         # 5. Нарезка на 4 части
