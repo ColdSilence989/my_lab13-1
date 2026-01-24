@@ -23,5 +23,3 @@ tmp/
 .DS_Store
 Thumbs.db
 
-# Результаты тестов
-.pytest_cache/
