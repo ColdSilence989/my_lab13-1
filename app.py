@@ -33,7 +33,7 @@ def image_to_base64(img_pil):
     # Если картинка слишком большая, уменьшаем её для экономии RAM
     img_pil.thumbnail((400, 400)) 
     buf = io.BytesIO()
-    img_pil.save(buf, format="JPG", quality=60) # JPG вместо PNG
+    img_pil.save(buf, format="JPEG", quality=60) # JPEG вместо PNG
     return base64.b64encode(buf.getvalue()).decode('utf-8')
 
 def get_base64_hist(img_np, title):
